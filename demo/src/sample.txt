@@ -1,0 +1,143 @@
+
+const model = {
+  name: "Sanket",
+  heros: [
+  {
+    id: 1,
+    name: 'Whirlwind',
+    addresses: [
+      {street: '123 Main',  city: 'Anywhere', state: 'CA',  zip: '94801'},
+      {street: '456 Maple', city: 'Somewhere', state: 'VA', zip: '23226'},
+    ]
+  },
+  {
+    id: 2,
+    name: 'Bombastic',
+    addresses: [
+      {street: '789 Elm',  city: 'Smallville', state: 'OH',  zip: '04501'},
+    ]
+  },
+  {
+    id: 3,
+    name: 'Magneta',
+    addresses: [ ]
+  }
+]
+}
+
+import Form from "gform";
+
+
+
+
+<Form value={} onChange={}>
+  {$form => <div>
+      <h1>My Awesome Form</h1>
+
+      <$form.ui.input model="name" validate={customValidator} />
+      {$form.name.$invalid && <div>Error in myName</div>}
+
+      <$form.ui.checkbox model="name" validate={['required', 'email']} />
+
+      {$form.map('heros', $hero => <div>
+
+          <$hero.ui.input model="id" required />
+          <$hero.ui.select model="adresses" required />
+
+          {$hero.map('addresses', $address => <div>
+              Address is {$address.model.title}
+            </div>}
+        </div>}
+
+    <button onClick={() => $form.set('name', 'asdasd')}>Add new hero</button>
+
+    </div>
+  }
+</Form>
+
+
+
+
+
+
+
+const model = {
+  name: "Sanket",
+  todos: [
+    "first",
+    "second"
+  ]
+}
+
+<Form>
+  {$form => <div>
+    <$form.ui.input model="name" />
+    {$form.data.name}
+    {$form.map('todos', $todo => <div>
+      <$todo.ui.input />
+      {$todo.data}
+    </div>)}
+  </div>}
+</Form>
+
+
+class GForm {
+  constructor() {
+    super();
+    // this.store = createStore()
+  }
+
+  render() {
+    return <Provider store={store}>
+      {this.children(store)}
+    </Provider>
+  }
+}
+
+
+$form = createController(this);
+
+function createController(gForm) {
+
+  return {
+    setRule(path, )
+  }
+
+}
+
+
+$form 
+
+
+
+this.context.form = form;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Form onChange={} value={}>
+  {$form => <div>
+    <ul>{$form.map('todos', ($todo) => <li>
+        <$todo.ui.input model="caption" validate="required" />
+        <$todo.ui.checkbox model="completed" defaultValue={true} />
+        </li>}</ul>
+      <$form.ui.input model="userInput" />
+      <button type="button" onClick={() => {
+        $form.push('todos', { caption: $form.values.userInput });
+        $form.set('userInput', '');
+      }>Add new</button>
+    </div>}
+</Form>
+

@@ -1,0 +1,11 @@
+
+            {$form.map("heros", ($hero: any) => (
+              <div>
+                <$hero.ui.input model="id" required />
+                <$hero.ui.select model="adresses" required />
+
+                {$hero.map("addresses", ($address: any) => (
+                  <div>Address is {$address.model.title}</div>
+                ))}
+              </div>
+            ))}

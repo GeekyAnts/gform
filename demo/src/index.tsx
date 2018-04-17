@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { render } from 'react-dom';
+import * as _ from 'lodash';
 
 import Form from '../../src';
-
 class Demo extends React.Component {
+  componentDidMount() {
+    let error = {};
+    let model = 'address[0].line1';
+    _.set(error, model, { value: 'acid' });
+    console.log(error);
+  }
   render() {
     return (
       <div>

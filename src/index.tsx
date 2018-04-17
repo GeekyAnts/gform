@@ -8,6 +8,8 @@ export default class GForm extends React.Component<
   any
 > {
   actions: any;
+  ui: any;
+
   constructor(props: any) {
     super(props);
     autobind(this);
@@ -22,7 +24,6 @@ export default class GForm extends React.Component<
         submitted: false
       }
     };
-
     this.actions = {
       set: this.set,
       validate: this.validate,

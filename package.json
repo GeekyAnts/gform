@@ -19,6 +19,8 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.107",
+    "lodash": "^4.17.5",
     "react-autobind": "^1.0.6"
   },
   "peerDependencies": {

@@ -4,11 +4,71 @@
 [![npm package][npm-badge]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
-Describe gform here.
+## Use case
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+```
+<Form>
+          {($form: any) => (
+            <div>
+              <h4>First: (Multi validation rules)</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'firstName',
+                  validation: [{ customRegx: '^[0-9]+$' }, 'digits']
+                })}
+              />
+              // Nested form
+              <h3>Addresses (Nesting)</h3>
+              <div style={{ background: 'green', padding: 30 }}>
+                {$form.map('books', ($address: any) => {
+                  return (
+                    <div key={$address.index}>
+                      <h4>landmark</h4>
+                      <input
+                        {...$address.getHandlers({
+                          type: 'input',
+                          model: 'landmark',
+                          validation: 'letters'
+                        })}
+                      />
+                    </div>
+                  );
+                })}
+          )}
+        </Form>
+```
+
+## Later all form data is available within out component in the $form object
+
+```
+        {
+    "firstName": {
+        "errors": {
+            "valid": false,
+            "errorMessages": {
+                "digits": "only numbers",
+                "customRegx": "No match"
+            }
+        },
+        "touched": false,
+        "untouched": true,
+        "pristine": true,
+        "dirty": false
+    },
+    "address": [
+        {
+            "landmark": {
+                "errors": {
+                    "valid": true,
+                    "errorMessages": {}
+                },
+                "touched": false,
+                "untouched": true,
+                "pristine": true,
+                "dirty": false
+            }
+        }
+    ]
+}
+```

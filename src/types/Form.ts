@@ -1,5 +1,5 @@
-import * as React from "react";
-import FormField from "./FormField";
+import * as React from 'react';
+import FormField from './FormField';
 export default interface Form {
   $pristine: boolean;
   $dirty: boolean;
@@ -9,7 +9,7 @@ export default interface Form {
   fields: FormFields;
   ui: UIs;
   map: (field: string) => {};
-};
+}
 
 interface FormFields {
   [key: string]: FormField;
@@ -17,4 +17,14 @@ interface FormFields {
 
 interface UIs {
   [key: string]: React.ComponentClass;
+}
+
+interface actions {
+  set: Function;
+  validate: Function;
+  setTouched: Function;
+  setPristine: Function;
+}
+interface form {
+  values: {};
 }

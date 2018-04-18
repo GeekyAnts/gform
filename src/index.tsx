@@ -7,8 +7,12 @@ export default class GForm extends React.Component<
   { children: (form: any) => {}; initialValues?: {} },
   any
 > {
-  actions: any;
-  ui: any;
+  actions: {
+    set: Function;
+    validate: Function;
+    setTouched: Function;
+    setPristine: Function;
+  };
 
   constructor(props: any) {
     super(props);
@@ -37,7 +41,7 @@ export default class GForm extends React.Component<
       return { values: { ...this.state.values, ...this.props.initialValues } };
     });
   }
-  map(model1: any, renderFormNest: any) {
+  map(model1: string, renderFormNest: Function) {
     if (!this.state.values[model1]) {
       setTimeout(() => {
         this.setState({
@@ -66,7 +70,7 @@ export default class GForm extends React.Component<
     }
   }
 
-  validate(model: string, value: any, validation: any) {
+  validate(model: string, value: string, validation: any) {
     let fieldStatus = this.state.fieldStatus;
     let prevObj = _.get(this.state.fieldStatus, model)
       ? _.get(this.state.fieldStatus, model)

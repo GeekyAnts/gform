@@ -4,17 +4,11 @@ import * as _ from 'lodash';
 
 import Form from '../../src';
 class Demo extends React.Component {
-  componentDidMount() {
-    let error = {};
-    let model = 'address[0].line1';
-    _.set(error, model, { value: 'acid' });
-    console.log(error);
-  }
   render() {
     return (
       <div>
         <h1>g-schema</h1>
-        <Form initialValues={{ address: [{ line1: { value: '78' } }] }}>
+        <Form>
           {($form: any) => (
             <div>
               <h4>First: (Multi validation rules)</h4>
@@ -22,7 +16,7 @@ class Demo extends React.Component {
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'firstName',
-                  validation: { customRegx: '^[0-9]+$' }
+                  validation: [{ customRegx: '^[0-9]+$' }, 'digits']
                 })}
               />
               <h4>Naam:</h4>
@@ -35,7 +29,7 @@ class Demo extends React.Component {
               />
               <h3>Addresses (Nesting)</h3>
               <div style={{ background: 'green', padding: 30 }}>
-                {$form.map('address', ($address: any) => {
+                {$form.map('books', ($address: any) => {
                   return (
                     <div key={$address.index}>
                       <h4>landmark</h4>

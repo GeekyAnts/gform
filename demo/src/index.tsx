@@ -16,7 +16,7 @@ class Demo extends React.Component {
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'firstName',
-                  validation: [{ customRegx: '^[0-9]+$' }, 'digits']
+                  validation: ['alphaNumeric', { min: 9 }]
                 })}
               />
               <h4>Naam:</h4>
@@ -29,7 +29,7 @@ class Demo extends React.Component {
               />
               <h3>Addresses (Nesting)</h3>
               <div style={{ background: 'green', padding: 30 }}>
-                {$form.map('books', ($address: any) => {
+                {$form.map('address', ($address: any) => {
                   return (
                     <div key={$address.index}>
                       <h4>landmark</h4>

@@ -72,3 +72,11 @@
     ]
 }
 ```
+
+## Validations :-
+
+Validations can be one of following
+
+1.  Predefined strings ('email', 'digits', 'alphaNumeric', 'alphaNumericNoSpaces', 'ip', 'password', 'urls').
+2.  Objects ({max : 10}, { min: 8 }, { validationRule: anyStringFromAbove }, { customRegx: 'customRegularExpression'})
+3.  Array: Collection of any of the above validationRules.

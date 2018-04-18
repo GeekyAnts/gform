@@ -73,7 +73,7 @@ export default class GForm extends React.Component<
       : { errors: {} };
     delete prevObj.errors;
     _.set(fieldStatus, model, {
-      errors: validator(model, value, validation, this.state.errors),
+      errors: validator(value, validation),
       ...prevObj
     });
     this.setState(
@@ -160,19 +160,19 @@ export default class GForm extends React.Component<
   }
 
   getHandlers({ type, model, validation }: any) {
-    setTimeout(() => {
-      if (!_.get(this.state.fieldStatus, model)) {
-        this.actions.validate(
-          model,
-          this.state.values[model] ? this.state.values[model] : '',
-          validation
-        );
-        this.actions.setTouched(model, false);
-        this.actions.setPristine(model, true);
-      }
-    }, 0);
     switch (type) {
       case 'input':
+        setTimeout(() => {
+          if (!_.get(this.state.fieldStatus, model)) {
+            this.actions.validate(
+              model,
+              this.state.values[model] ? this.state.values[model] : '',
+              validation
+            );
+            this.actions.setTouched(model, false);
+            this.actions.setPristine(model, true);
+          }
+        }, 0);
         return {
           value: _.get(this.state.values, model)
             ? _.get(this.state.values, model).value

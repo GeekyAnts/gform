@@ -14,12 +14,7 @@ class Demo extends React.Component {
     return (
       <div>
         <h1>g-schema</h1>
-        <Form
-          initialValues={{
-            firstName: { value: 'Jasbir' },
-            address: [{ line1: { value: '78' } }]
-          }}
-        >
+        <Form initialValues={{ address: [{ line1: { value: '78' } }] }}>
           {($form: any) => (
             <div>
               <h4>First: (Multi validation rules)</h4>
@@ -27,7 +22,7 @@ class Demo extends React.Component {
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'firstName',
-                  validation: ['email']
+                  validation: { customRegx: '^[0-9]+$' }
                 })}
               />
               <h4>Naam:</h4>
@@ -43,7 +38,7 @@ class Demo extends React.Component {
                 {$form.map('address', ($address: any) => {
                   return (
                     <div key={$address.index}>
-                      <h4>line4</h4>
+                      <h4>landmark</h4>
                       <input
                         {...$address.getHandlers({
                           type: 'input',
@@ -51,7 +46,7 @@ class Demo extends React.Component {
                           validation: 'letters'
                         })}
                       />
-                      <h4>landmark</h4>
+                      <h4>line4</h4>
 
                       <input
                         {...$address.getHandlers({

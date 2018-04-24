@@ -37,11 +37,12 @@ export default class GForm extends React.Component<
 
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
-      this.props.onChange({
+      setTimeout(() => this.props.onChange({
         ...this.props.values,
         [model1]: [{}]
-      });
-    } else {
+      }), 0);
+    }
+    else {
       return this.props.values[model1].map((item: any, index: number) => {
         return renderFormNest({
           index: index,
@@ -118,18 +119,14 @@ export default class GForm extends React.Component<
   }
 
   set(model: string, value: any, validation: any, values: any) {
-    console.log(model)
-    _.set(values, model, {
-      value: value
-    });
+    let newValues = _.set(values, model, value);
+    console.log(newValues);
+    this.props.onChange(newValues);
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     this.actions.validate(model, value, validation);
     _.get(this.state.fieldStatus, model).pristine
       ? this.actions.setPristine(model, false)
       : undefined;
-    this.props.onChange ? this.props.onChange({
-      ...this.props.values,
-    }) : undefined;
   }
 
   setTouched(model: string, value: boolean) {
@@ -171,7 +168,7 @@ export default class GForm extends React.Component<
         }, 0);
         return {
           value: _.get(this.props.values, model)
-            ? _.get(this.props.values, model).value
+            ? _.get(this.props.values, model)
             : '',
           onChange: (e: any) =>
             this.actions.set(model, e.target.value, validation, this.props.values),

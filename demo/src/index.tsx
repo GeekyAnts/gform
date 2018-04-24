@@ -8,11 +8,11 @@ class Demo extends React.Component<any, any> {
     super(props);
     autobind(this);
     this.state = {
-      values: { address: [{ landmark: { value: 'santosh sir' }, line4: { value: 'fsa' } }], firstName: { value: 'jazza' } }
+      values: { address: [{ landmark: 'santosh sir', line4: 'fsa' }], firstName: 'jazza' }
     }
   }
   increaseNest() {
-    this.state.values.address.push({ landmark: { value: '' }, line4: { value: '' } });
+    this.state.values.address.push({ landmark: '', line4: '' });
     this.setState({
       values: this.state.values
     })
@@ -52,7 +52,7 @@ class Demo extends React.Component<any, any> {
               />
               <h3>Addresses (Nesting)</h3>
               <div style={{ background: 'green', padding: 30 }}>
-                {$form.map('address', ($address: any) => {
+                {$form.map('books', ($address: any) => {
                   return (
                     <div key={$address.index}>
                       <h1>Nest: {$address.index}</h1>

@@ -4,9 +4,9 @@ import autobind from 'react-autobind';
 import * as _ from 'lodash';
 
 export default class GForm extends React.Component<
-  { children: (form: any) => {}; initialValues?: {} },
+  { children: (form: any) => {}; initialValues?: any, onChange: Function, values?: any },
   any
-> {
+  > {
   actions: {
     set: Function;
     validate: Function;
@@ -18,7 +18,6 @@ export default class GForm extends React.Component<
     super(props);
     autobind(this);
     this.state = {
-      values: {},
       fieldStatus: {},
       formStatus: {
         pristine: true,
@@ -36,23 +35,14 @@ export default class GForm extends React.Component<
     };
   }
 
-  componentWillMount() {
-    this.setState(() => {
-      return { values: { ...this.state.values, ...this.props.initialValues } };
-    });
-  }
   map(model1: string, renderFormNest: Function) {
-    if (!this.state.values[model1]) {
-      setTimeout(() => {
-        this.setState({
-          values: {
-            ...this.state.values,
-            [model1]: [{}]
-          }
-        });
-      }, 0);
+    if (!this.props.values[model1]) {
+      this.props.onChange({
+        ...this.props.values,
+        [model1]: [{}]
+      });
     } else {
-      return this.state.values[model1].map((item: any, index: number) => {
+      return this.props.values[model1].map((item: any, index: number) => {
         return renderFormNest({
           index: index,
           each: item,
@@ -112,32 +102,34 @@ export default class GForm extends React.Component<
     });
     invalidCount === 0
       ? this.setState({
-          formStatus: {
-            ...this.state.formStatus,
-            valid: true,
-            invalid: false
-          }
-        })
+        formStatus: {
+          ...this.state.formStatus,
+          valid: true,
+          invalid: false
+        }
+      })
       : this.setState({
-          formStatus: {
-            ...this.state.formStatus,
-            valid: false,
-            invalid: true
-          }
-        });
+        formStatus: {
+          ...this.state.formStatus,
+          valid: false,
+          invalid: true
+        }
+      });
   }
 
-  set(model: string, value: any, validation: any) {
+  set(model: string, value: any, validation: any, values: any) {
+    console.log(model)
+    _.set(values, model, {
+      value: value
+    });
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     this.actions.validate(model, value, validation);
     _.get(this.state.fieldStatus, model).pristine
       ? this.actions.setPristine(model, false)
       : undefined;
-    let vals = this.state.values;
-    _.set(vals, model, {
-      ..._.get(this.state.values, model),
-      value: value
-    });
+    this.props.onChange ? this.props.onChange({
+      ...this.props.values,
+    }) : undefined;
   }
 
   setTouched(model: string, value: boolean) {
@@ -170,7 +162,7 @@ export default class GForm extends React.Component<
           if (!_.get(this.state.fieldStatus, model)) {
             this.actions.validate(
               model,
-              this.state.values[model] ? this.state.values[model] : '',
+              this.props.values[model] ? this.props.values[model] : '',
               validation
             );
             this.actions.setTouched(model, false);
@@ -178,11 +170,11 @@ export default class GForm extends React.Component<
           }
         }, 0);
         return {
-          value: _.get(this.state.values, model)
-            ? _.get(this.state.values, model).value
+          value: _.get(this.props.values, model)
+            ? _.get(this.props.values, model).value
             : '',
           onChange: (e: any) =>
-            this.actions.set(model, e.target.value, validation),
+            this.actions.set(model, e.target.value, validation, this.props.values),
           onFocus: (e: any) => this.actions.setTouched(model, true)
         };
         break;
@@ -192,7 +184,7 @@ export default class GForm extends React.Component<
 
   render() {
     return this.props.children({
-      values: this.state.values,
+      values: this.props.values,
       actions: this.actions,
       getHandlers: this.getHandlers,
       fieldStatus: this.state.fieldStatus,

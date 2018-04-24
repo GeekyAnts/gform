@@ -1,22 +1,45 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import * as _ from 'lodash';
-
+import autobind from 'react-autobind';
 import Form from '../../src';
-class Demo extends React.Component {
+class Demo extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    autobind(this);
+    this.state = {
+      values: { address: [{ landmark: { value: 'santosh sir' }, line4: { value: 'fsa' } }], firstName: { value: 'jazza' } }
+    }
+  }
+  increaseNest() {
+    this.state.values.address.push({ landmark: { value: '' }, line4: { value: '' } });
+    this.setState({
+      values: this.state.values
+    })
+  }
+  decreaseNest() {
+    this.state.values.address.pop();
+    this.setState({
+      values: this.state.values
+    })
+  }
   render() {
     return (
       <div>
         <h1>g-schema</h1>
-        <Form>
+        <Form
+          values={this.state.values}
+          onChange={(values: {}) => {
+            this.setState({ values: values })
+          }}>
           {($form: any) => (
             <div>
-              <h4>First: (Multi validation rules)</h4>
+              <h4 >First: (Multi validation rules)</h4>
               <input
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'firstName',
-                  validation: ['alphaNumeric', { min: 9 }]
+                  validation: ['alphaNumeric', { min: 2 }]
                 })}
               />
               <h4>Naam:</h4>
@@ -32,6 +55,7 @@ class Demo extends React.Component {
                 {$form.map('address', ($address: any) => {
                   return (
                     <div key={$address.index}>
+                      <h1>Nest: {$address.index}</h1>
                       <h4>landmark</h4>
                       <input
                         {...$address.getHandlers({
@@ -49,18 +73,12 @@ class Demo extends React.Component {
                           validation: 'letters'
                         })}
                       />
-                      <h4>line5</h4>
-                      <input
-                        {...$address.getHandlers({
-                          type: 'input',
-                          model: 'line5',
-                          validation: 'letters'
-                        })}
-                      />
                     </div>
                   );
                 })}
               </div>
+              <button onClick={(e) => this.increaseNest()}>INCREASE</button>
+              <button onClick={(e) => this.decreaseNest()}>DECREASE</button>
               <h3>Values</h3>
               <pre>{JSON.stringify($form.values, null, 4)}</pre>
               <h3>FieldStatus:</h3>
@@ -70,6 +88,7 @@ class Demo extends React.Component {
             </div>
           )}
         </Form>
+        <button onClick={(e) => this.setState({ values: { firstName: { value: "Rat" } } })}>TOGGLE VALUES</button>
       </div>
     );
   }

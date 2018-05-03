@@ -1,14 +1,11 @@
 const emailRegx = /^[A-Za-z0-9.]+[@]{1}[A-Za-z0-9]+[.]{1}[A-Za-z0-9.]+$/;
 const numberRegx = /^[0-9]+$/;
 let maxMin = '^[a-zA-Z0-9]{min,max}$';
-
 const alphaNumericWithSpaces = /^[a-zA-Z0-9 ]*$/; // alphaNumeric with spaces
 const alphaNumericNoSpaces = /^[a-zA-Z0-9]*$/; // alphaNumeric with spaces
-const alpahbets = /^[a-zA-Z]*$/; // alphabets
 const ip = /^((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))*$/;
 const password = /^(?=^.{6,}$)((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.*$/; // The password must contain one lowercase letter, one uppercase letter, one number, and be at least 6 characters long.
 const urls = /^(((http|https|ftp):\/\/)?([[a-zA-Z0-9]\-\.])+(\.)([[a-zA-Z0-9]]){2,4}([[a-zA-Z0-9]\/+=%&_\.~?\-]*))*$/;
-
 export default function validate(value: any, validation: any) {
   let outputError = { valid: true, errorMessages: {} };
   if (validation.constructor === Array) {
@@ -84,15 +81,15 @@ function getErrorMessage(validation: string, value: string) {
     case 'digits':
       return numberRegx.test(value) ? undefined : 'only numbers';
     case 'alphaNumeric':
-      return alphaNumericWithSpaces.test(value) ? undefined : 'only letters';
+      return alphaNumericWithSpaces.test(value) ? undefined : 'invalid';
     case 'alphaNumericNoSpaces':
-      return alphaNumericNoSpaces.test(value) ? undefined : 'only letters';
+      return alphaNumericNoSpaces.test(value) ? undefined : 'invalid';
     case 'ip':
-      return ip.test(value) ? undefined : 'only letters';
+      return ip.test(value) ? undefined : 'invalid';
     case 'password':
-      return password.test(value) ? undefined : 'only letters';
+      return password.test(value) ? undefined : 'invalid';
     case 'urls':
-      return urls.test(value) ? undefined : 'only letters';
+      return urls.test(value) ? undefined : 'invalid';
     default:
       return undefined;
   }

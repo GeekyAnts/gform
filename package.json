@@ -19,9 +19,12 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
+    "@types/deep-diff": "0.0.31",
     "@types/lodash": "^4.14.107",
+    "deep-diff": "^1.0.0",
     "lodash": "^4.17.5",
-    "react-autobind": "^1.0.6"
+    "react-autobind": "^1.0.6",
+    "rxjs": "^6.0.0"
   },
   "peerDependencies": {
     "react": "16.x"

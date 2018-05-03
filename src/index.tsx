@@ -1,12 +1,23 @@
 import * as React from 'react';
 import validator from './validator/validator';
 import autobind from 'react-autobind';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, map, pairwise } from 'rxjs/operators';
 import * as _ from 'lodash';
+import ObjectDiffer from './objectDiffer';
+
+let valuePropStream = new Subject();
+// let values = {};
 
 export default class GForm extends React.Component<
-  { children: (form: any) => {}; initialValues?: any, onChange: Function, values?: any },
+  {
+    children: (form: any) => {};
+    initialValues?: any;
+    onChange: Function;
+    values?: any;
+  },
   any
-  > {
+> {
   actions: {
     set: Function;
     validate: Function;
@@ -25,7 +36,8 @@ export default class GForm extends React.Component<
         valid: false,
         invalid: true,
         submitted: false
-      }
+      },
+      values: {}
     };
     this.actions = {
       set: this.set,
@@ -34,15 +46,58 @@ export default class GForm extends React.Component<
       setPristine: this.setPristine
     };
   }
+  componentDidMount() {
+    valuePropStream
+      .pipe(
+        map(val => {
+          console.log(val);
+          return val;
+        }),
+        pairwise(),
+        map(([a, b]) => {
+          console.log(a, b);
+          return ObjectDiffer(b, a);
+        })
+      )
+      .subscribe(val =>
+        console.log(val, 'Change in props // Difference object')
+      );
+    valuePropStream.next({});
+  }
+
+  componentWillReceiveProps(next: any) {
+    console.log(next, 'jk');
+    this.propStream(next.values);
+    // valuePropStream.next(next.values);
+  }
+
+  propStream(val: any) {
+    // console.log(val, this.state.values);
+    if (this.state.values !== val) {
+      console.log(val, this.state.values);
+      console.log(ObjectDiffer(this.state.values, val));
+      this.setState(
+        {
+          values: { ...val }
+        },
+        () => console.log('last set values', this.state.values)
+      );
+      // values = { ...val };
+      // _.set(values, undefined , val);
+    }
+  }
 
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
-      setTimeout(() => this.props.onChange({
-        ...this.props.values,
-        [model1]: [{}]
-      }), 0);
-    }
-    else {
+      setTimeout(
+        () =>
+          this.props.onChange({
+            ...this.props.values,
+            [model1]: [{}]
+          }),
+        0
+      );
+    } else {
       return this.props.values[model1].map((item: any, index: number) => {
         return renderFormNest({
           index: index,
@@ -103,24 +158,24 @@ export default class GForm extends React.Component<
     });
     invalidCount === 0
       ? this.setState({
-        formStatus: {
-          ...this.state.formStatus,
-          valid: true,
-          invalid: false
-        }
-      })
+          formStatus: {
+            ...this.state.formStatus,
+            valid: true,
+            invalid: false
+          }
+        })
       : this.setState({
-        formStatus: {
-          ...this.state.formStatus,
-          valid: false,
-          invalid: true
-        }
-      });
+          formStatus: {
+            ...this.state.formStatus,
+            valid: false,
+            invalid: true
+          }
+        });
   }
 
   set(model: string, value: any, validation: any, values: any) {
-    let newValues = _.set(values, model, value);
-    console.log(newValues);
+    let newValues = _.update(_.clone(values), model, value); // fixed immutability bug
+    console.log(newValues, 'Set called');
     this.props.onChange(newValues);
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     this.actions.validate(model, value, validation);
@@ -153,6 +208,7 @@ export default class GForm extends React.Component<
   }
 
   getHandlers({ type, model, validation }: any) {
+    let vals = { ...this.props.values };
     switch (type) {
       case 'input':
         setTimeout(() => {
@@ -171,7 +227,7 @@ export default class GForm extends React.Component<
             ? _.get(this.props.values, model)
             : '',
           onChange: (e: any) =>
-            this.actions.set(model, e.target.value, validation, this.props.values),
+            this.actions.set(model, e.target.value, validation, vals),
           onFocus: (e: any) => this.actions.setTouched(model, true)
         };
         break;

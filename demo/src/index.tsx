@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-dom';
+import {render} from 'react-dom';
 import * as _ from 'lodash';
 import autobind from 'react-autobind';
 import Form from '../../src';
@@ -9,13 +9,13 @@ class Demo extends React.Component<any, any> {
     autobind(this);
     this.state = {
       values: {
-        address: [{ landmark: 'santosh sir', line4: 'fsa' }],
-        firstName: 'jazza'
-      }
+        address: [{landmark: 'santosh sir', line4: 'fsa'}],
+        firstName: 'jazza',
+      },
     };
   }
   increaseNest() {
-    this.state.values.address.push({ landmark: '', line4: '' });
+    this.state.values.address.push({landmark: '', line4: ''});
     this.forceUpdate();
     // this.setState({
     //   values: {
@@ -38,17 +38,41 @@ class Demo extends React.Component<any, any> {
         <Form
           values={this.state.values}
           onChange={(values: {}) => {
-            this.setState({ values: values });
+            console.log(values, 'general onChange');
+            this.setState({values: {...values}});
           }}
         >
           {($form: any) => (
             <div>
+              <h4>Reuired validator</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'required',
+                  validation: ['required'],
+                })}
+              />
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '2%',
+                  paddingLeft: '2%',
+                }}
+              >
+                {$form.fieldStatus.required &&
+                $form.fieldStatus.required.errors.valid ? (
+                  'valid'
+                ) : (
+                  'Invalid'
+                )}
+              </div>
               <h4>First: (Multi validation rules)</h4>
               <input
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'firstName',
-                  validation: ['alphaNumeric', { min: 2 }]
+                  validation: ['alphaNumeric', {min: 2}],
                 })}
               />
               <h4>Naam:</h4>
@@ -56,11 +80,11 @@ class Demo extends React.Component<any, any> {
                 {...$form.getHandlers({
                   type: 'input',
                   model: 'caption',
-                  validation: 'letters'
+                  validation: 'letters',
                 })}
               />
               <h3>Addresses (Nesting)</h3>
-              <div style={{ background: 'green', padding: 30 }}>
+              <div style={{background: 'green', padding: 30}}>
                 {$form.map('address', ($address: any) => {
                   return (
                     <div key={$address.index}>
@@ -70,7 +94,7 @@ class Demo extends React.Component<any, any> {
                         {...$address.getHandlers({
                           type: 'input',
                           model: 'landmark',
-                          validation: 'email'
+                          validation: 'email',
                         })}
                       />
                       <h4>line4</h4>
@@ -79,7 +103,7 @@ class Demo extends React.Component<any, any> {
                         {...$address.getHandlers({
                           type: 'input',
                           model: 'line4',
-                          validation: 'email'
+                          validation: 'email',
                         })}
                       />
                     </div>
@@ -100,9 +124,8 @@ class Demo extends React.Component<any, any> {
         <button
           onClick={e =>
             this.setState({
-              values: { ...this.state.values, firstName: 'hehehe' }
-            })
-          }
+              values: {...this.state.values, firstName: 'hehehe'},
+            })}
         >
           TOGGLE VALUES
         </button>

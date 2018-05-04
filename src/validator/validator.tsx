@@ -10,7 +10,7 @@ const required = /^.+$/;
 export default function validate(value: any, validation: any) {
   let outputError = {valid: true, errorMessages: {}};
   if (validation.constructor === Array) {
-    validation.map((item: string, index: number) => {
+    validation.map((item: any, index: number) => {
       if (item.constructor === Object) {
         outputError = {
           ...outputError,
@@ -29,6 +29,19 @@ export default function validate(value: any, validation: any) {
           },
           valid: getErrorMessage(item, value) ? false : outputError.valid,
         };
+      } else if (typeof item === 'function') {
+        let validationResult = item(value);
+
+        if (outputError.valid === true) {
+          outputError = {
+            ...outputError,
+            errorMessages: {
+              [validationResult.nameOfValidator]: validationResult.errorMessage,
+              ...outputError.errorMessages,
+            },
+            valid: validationResult.valid,
+          };
+        }
       }
     });
   } else if (validation.constructor === Object) {
@@ -47,6 +60,15 @@ export default function validate(value: any, validation: any) {
         [validation]: getErrorMessage(validation, value),
       },
       valid: getErrorMessage(validation, value) ? false : outputError.valid,
+    };
+  } else if (typeof validation === 'function') {
+    let validationResult = validation(value);
+    outputError = {
+      ...outputError,
+      errorMessages: {
+        [validationResult.nameOfValidator]: validationResult.errorMessage,
+      },
+      valid: validationResult.valid,
     };
   }
   return outputError;

@@ -31,6 +31,43 @@ class Demo extends React.Component<any, any> {
     this.state.values.address.pop();
     this.forceUpdate();
   }
+  validate2(values: any) {
+    let error;
+    if (values === 'aA1aaa') {
+      error = {
+        nameOfValidator: 'CustomValidation2',
+        valid: true,
+        errorMessage: undefined,
+      };
+    } else {
+      error = {
+        nameOfValidator: 'CustomValidation2',
+        valid: false,
+        errorMessage:
+          'Validated through custom validator method.value must be "aA1aaa"',
+      };
+    }
+    return error;
+  }
+
+  validate(values: any) {
+    let error;
+    if (values) {
+      error = {
+        nameOfValidator: 'CustomValidation',
+        valid: true,
+        errorMessage: undefined,
+      };
+    } else {
+      error = {
+        nameOfValidator: 'CustomValidation',
+        valid: false,
+        errorMessage:
+          'Validated through custom validator method.This field is required',
+      };
+    }
+    return error;
+  }
   render() {
     return (
       <div>
@@ -38,13 +75,60 @@ class Demo extends React.Component<any, any> {
         <Form
           values={this.state.values}
           onChange={(values: {}) => {
-            console.log(values, 'general onChange');
             this.setState({values: {...values}});
           }}
         >
           {($form: any) => (
             <div>
-              <h4>Reuired validator</h4>
+              <h4>custom validator method</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'customValidatorMethod',
+                  validation: this.validate,
+                })}
+              />
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '2%',
+                  paddingLeft: '2%',
+                }}
+              >
+                {$form.fieldStatus.customValidatorMethod &&
+                $form.fieldStatus.customValidatorMethod.errors.valid ? (
+                  'valid'
+                ) : (
+                  'invalid'
+                )}
+              </div>
+
+              <h4>custom validator method with other validators</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'customValidatorMethodWithOtherValidators',
+                  validation: [this.validate2, 'password'],
+                })}
+              />
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '2%',
+                  paddingLeft: '2%',
+                }}
+              >
+                {$form.fieldStatus.customValidatorMethodWithOtherValidators &&
+                $form.fieldStatus.customValidatorMethodWithOtherValidators
+                  .errors.valid ? (
+                  'valid'
+                ) : (
+                  'invalid'
+                )}
+              </div>
+              <h4>Required validator</h4>
               <input
                 {...$form.getHandlers({
                   type: 'input',

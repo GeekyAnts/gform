@@ -15,17 +15,16 @@ class Demo extends React.Component<any, any> {
     };
   }
   increaseNest() {
-    this.state.values.address.push({ landmark: '', line4: '' });
-    this.forceUpdate();
+    // let vals = _.merge({}, _.clone(this.state.values));
+    // vals.address.push({ landmark: 'j@g.com', line4: 'j@g.com' });
     // this.setState({
-    //   values: {
-    //     ...this.state.values,
-    //     address: [
-    //       { landmark: 'santosh sir', line4: 'fsa' },
-    //       { landmark: 'fasfaf sifasr', line4: 'hgf' }
-    //     ]
-    //   }
+    //   values: vals
     // });
+    this.state.values.address.push({
+      landmark: 'j@g.com',
+      line4: 'j@g.com'
+    });
+    this.forceUpdate();
   }
   decreaseNest() {
     this.state.values.address.pop();

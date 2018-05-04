@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 import ObjectDiffer from './objectDiffer';
 
 let valuePropStream = new Subject();
-// let values = {};
 
 export default class GForm extends React.Component<
   {
@@ -36,8 +35,7 @@ export default class GForm extends React.Component<
         valid: false,
         invalid: true,
         submitted: false
-      },
-      values: {}
+      }
     };
     this.actions = {
       set: this.set,
@@ -50,41 +48,25 @@ export default class GForm extends React.Component<
     valuePropStream
       .pipe(
         map(val => {
-          console.log(val);
           return val;
         }),
         pairwise(),
         map(([a, b]) => {
-          console.log(a, b);
-          return ObjectDiffer(b, a);
+          return ObjectDiffer(a, b);
         })
       )
       .subscribe(val =>
         console.log(val, 'Change in props // Difference object')
       );
     valuePropStream.next({});
+    valuePropStream.next(this.props.values);
   }
 
   componentWillReceiveProps(next: any) {
     console.log(next, 'jk');
-    this.propStream(next.values);
-    // valuePropStream.next(next.values);
-  }
-
-  propStream(val: any) {
-    // console.log(val, this.state.values);
-    if (this.state.values !== val) {
-      console.log(val, this.state.values);
-      console.log(ObjectDiffer(this.state.values, val));
-      this.setState(
-        {
-          values: { ...val }
-        },
-        () => console.log('last set values', this.state.values)
-      );
-      // values = { ...val };
-      // _.set(values, undefined , val);
-    }
+    let vals = _.merge({}, _.clone(next.values)); // Immutable
+    // this.propStream(vals);
+    valuePropStream.next(vals);
   }
 
   map(model1: string, renderFormNest: Function) {
@@ -174,8 +156,8 @@ export default class GForm extends React.Component<
   }
 
   set(model: string, value: any, validation: any, values: any) {
-    let newValues = _.update(_.clone(values), model, value); // fixed immutability bug
-    console.log(newValues, 'Set called');
+    let newValues = _.merge({}, _.clone(values)); // Immutable
+    _.set(newValues, model, value);
     this.props.onChange(newValues);
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     this.actions.validate(model, value, validation);
@@ -208,7 +190,6 @@ export default class GForm extends React.Component<
   }
 
   getHandlers({ type, model, validation }: any) {
-    let vals = { ...this.props.values };
     switch (type) {
       case 'input':
         setTimeout(() => {
@@ -227,7 +208,12 @@ export default class GForm extends React.Component<
             ? _.get(this.props.values, model)
             : '',
           onChange: (e: any) =>
-            this.actions.set(model, e.target.value, validation, vals),
+            this.actions.set(
+              model,
+              e.target.value,
+              validation,
+              this.props.values
+            ),
           onFocus: (e: any) => this.actions.setTouched(model, true)
         };
         break;

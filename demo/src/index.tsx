@@ -3,6 +3,10 @@ import {render} from 'react-dom';
 import * as _ from 'lodash';
 import autobind from 'react-autobind';
 import Form from '../../src';
+import Store from './store';
+import {observer} from 'mobx-react';
+
+@observer
 class Demo extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
@@ -55,6 +59,72 @@ class Demo extends React.Component<any, any> {
       <div>
         <h1>g-schema</h1>
         <Form
+          values={Store.values}
+          onChange={(values: any) => {
+            Store.values = {...values};
+          }}
+        >
+          {($form: any) => (
+            <div>
+              {/*TODO: solve this issue*/}
+              <h4>form with data from store</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'name',
+                  validation: ['required', {min: 2}],
+                })}
+              />
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '1%',
+                  marginBottom: '1%',
+                }}
+              >
+                {$form.fieldStatus.name &&
+                $form.fieldStatus.name.errors.valid ? (
+                  'valid'
+                ) : (
+                  'invalid'
+                )}
+              </div>
+
+              <h4>url</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'url',
+                  validation: ['urls'],
+                })}
+              />
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '1%',
+                  marginBottom: '1%',
+                }}
+              >
+                {$form.fieldStatus.url && $form.fieldStatus.url.errors.valid ? (
+                  'valid'
+                ) : (
+                  'invalid'
+                )}
+              </div>
+
+              <h3>Values</h3>
+              <pre>{JSON.stringify($form.values, null, 4)}</pre>
+              <h3>FieldStatus:</h3>
+              <pre>{JSON.stringify($form.fieldStatus, null, 4)}</pre>
+              <h3>formStatus:</h3>
+              <pre>{JSON.stringify($form.formStatus, null, 4)}</pre>
+            </div>
+          )}
+        </Form>
+        <hr />
+        <Form
           values={this.state.values}
           onChange={(values: {}) => {
             this.setState({values: {...values}});
@@ -62,6 +132,43 @@ class Demo extends React.Component<any, any> {
         >
           {($form: any) => (
             <div>
+              {/*TODO: solve this issue*/}
+              <h4>Change value on fly(through setstate)</h4>
+              <input
+                {...$form.getHandlers({
+                  type: 'input',
+                  model: 'mailId',
+                  validation: ['email'],
+                })}
+              />
+              <span>
+                <button
+                  onClick={() =>
+                    this.setState({
+                      values: {
+                        ...this.state.values,
+                        mailId: 'shakthi@geekyants.com',
+                      },
+                    })}
+                >
+                  change value of input box
+                </button>
+              </span>
+              <div
+                style={{
+                  color: 'red',
+                  fontSize: '14px',
+                  marginTop: '1%',
+                }}
+              >
+                {$form.fieldStatus.mailId &&
+                $form.fieldStatus.mailId.errors.valid ? (
+                  'valid'
+                ) : (
+                  'invalid'
+                )}
+              </div>
+
               <h4>custom validator method</h4>
               <input
                 {...$form.getHandlers({
@@ -74,8 +181,7 @@ class Demo extends React.Component<any, any> {
                 style={{
                   color: 'red',
                   fontSize: '14px',
-                  marginTop: '2%',
-                  paddingLeft: '2%',
+                  marginTop: '1%',
                 }}
               >
                 {$form.fieldStatus.customValidatorMethod &&
@@ -98,8 +204,7 @@ class Demo extends React.Component<any, any> {
                 style={{
                   color: 'red',
                   fontSize: '14px',
-                  marginTop: '2%',
-                  paddingLeft: '2%',
+                  marginTop: '1%',
                 }}
               >
                 {$form.fieldStatus.customValidatorMethodWithOtherValidators &&
@@ -122,8 +227,7 @@ class Demo extends React.Component<any, any> {
                 style={{
                   color: 'red',
                   fontSize: '14px',
-                  marginTop: '2%',
-                  paddingLeft: '2%',
+                  marginTop: '1%',
                 }}
               >
                 {$form.fieldStatus.required &&

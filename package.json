@@ -23,6 +23,8 @@
     "@types/lodash": "^4.14.107",
     "deep-diff": "^1.0.0",
     "lodash": "^4.17.5",
+    "mobx": "^4.2.0",
+    "mobx-react": "^5.1.2",
     "react-autobind": "^1.0.6",
     "rxjs": "^6.0.0"
   },

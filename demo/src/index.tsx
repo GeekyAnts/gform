@@ -32,41 +32,23 @@ class Demo extends React.Component<any, any> {
     this.forceUpdate();
   }
   validate2(values: any) {
-    let error;
+    let valid;
     if (values === 'aA1aaa') {
-      error = {
-        nameOfValidator: 'CustomValidation2',
-        valid: true,
-        errorMessage: undefined,
-      };
+      valid = true;
     } else {
-      error = {
-        nameOfValidator: 'CustomValidation2',
-        valid: false,
-        errorMessage:
-          'Validated through custom validator method.value must be "aA1aaa"',
-      };
+      valid = false;
     }
-    return error;
+    return valid;
   }
 
   validate(values: any) {
-    let error;
+    let valid;
     if (values) {
-      error = {
-        nameOfValidator: 'CustomValidation',
-        valid: true,
-        errorMessage: undefined,
-      };
+      valid = true;
     } else {
-      error = {
-        nameOfValidator: 'CustomValidation',
-        valid: false,
-        errorMessage:
-          'Validated through custom validator method.This field is required',
-      };
+      valid = false;
     }
-    return error;
+    return valid;
   }
   render() {
     return (

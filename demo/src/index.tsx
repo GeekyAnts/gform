@@ -11,39 +11,18 @@ class Demo extends React.Component<any, any> {
     this.state = {
       values: {
         address: [{ landmark: 'santosh sir', line4: 'acv' }],
-        firstName: 'jazza',
+        firstName: 'j',
         caption: 'Hala'
       }
     };
   }
-  componentDidMount() {
-    console.log('demo');
-    formRef.injectValues({
-      address: [{ landmark: 'santosh sir', line4: 'acv' }],
-      firstName: 'jazfasljjfalkza',
-      caption: 'Hala'
-    });
-  }
   increaseNest() {
-    this.setState({
-      values: {
-        address: [
-          { landmark: 'j@g.c', line4: 'acv' },
-          { landmark: 'j@g.c', line4: 'acv' }
-        ],
-        firstName: 'jazza',
-        caption: 'Hala'
-      }
-    });
+    this.state.values.address.push({ landmark: 'san@g.c', line4: 'acv@g.c' });
+    formRef.injectValues(this.state.values);
   }
   decreaseNest() {
-    this.setState({
-      values: {
-        address: [{ landmark: 'santosh sir', line4: 'acv' }],
-        firstName: 'jazza',
-        caption: 'Hala'
-      }
-    });
+    this.state.values.address.pop();
+    formRef.injectValues(this.state.values);
   }
   render() {
     return (

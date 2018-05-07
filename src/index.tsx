@@ -2,7 +2,6 @@ import * as React from 'react';
 import validator from './validator/validator';
 import autobind from 'react-autobind';
 import * as _ from 'lodash';
-import ObjectDiffer from './objectDiffer';
 
 export default class GForm extends React.Component<
   {
@@ -31,7 +30,7 @@ export default class GForm extends React.Component<
         invalid: true,
         submitted: false
       },
-      modelValidationPairs: {}
+      touchedModels: {}
     };
     this.actions = {
       set: this.set,
@@ -40,12 +39,10 @@ export default class GForm extends React.Component<
     this.props.getFormRef ? this.props.getFormRef(this.actions) : undefined;
   }
   injectValues(values: any) {
-    this.setState(
-      {
-        fieldStatus: {}
-      },
-      () => this.props.onChange(values)
-    );
+    this.setState({
+      fieldStatus: {}
+    });
+    this.props.onChange(values);
   }
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
@@ -90,7 +87,9 @@ export default class GForm extends React.Component<
       () => {
         return { fieldStatus: fieldStatus };
       },
-      () => this.setFormValidity(this.state.fieldStatus)
+      () => {
+        this.setFormValidity(this.state.fieldStatus);
+      }
     );
   }
 
@@ -144,6 +143,12 @@ export default class GForm extends React.Component<
   }
 
   setTouched(model: string, value: boolean) {
+    this.setState({
+      touchedModels: {
+        ...this.state.touchedModels,
+        [model]: value
+      }
+    });
     let fieldStatus = this.state.fieldStatus;
     _.set(fieldStatus, model, {
       ..._.get(this.state.fieldStatus, model),
@@ -171,9 +176,10 @@ export default class GForm extends React.Component<
       case 'input':
         setTimeout(() => {
           if (!_.get(this.state.fieldStatus, model)) {
-            _.set(this.state.validation, model, validation);
             this.validate(model, _.get(this.props.values, model), validation);
-            this.setTouched(model, false);
+            this.state.touchedModels[model]
+              ? this.setTouched(model, true)
+              : this.setTouched(model, false);
             _.get(this.props.values, model) === ''
               ? this.setPristine(model, true)
               : this.setPristine(model, false);
@@ -200,7 +206,6 @@ export default class GForm extends React.Component<
   }
 
   render() {
-    console.log('render');
     return this.props.children({
       values: this.props.values,
       actions: this.actions,

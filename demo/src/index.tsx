@@ -31,7 +31,7 @@ class Demo extends React.Component<any, any> {
         <Form
           values={this.state.values}
           onChange={(values: {}) => {
-            this.setState({ values: values });
+            this.setState({ values: { ...values } });
           }}
           getFormRef={(ref: any) => (formRef = ref)}
         >

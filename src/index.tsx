@@ -31,7 +31,7 @@ export default class GForm extends React.Component<
         invalid: true,
         submitted: false
       },
-      validation: {}
+      modelValidationPairs: {}
     };
     this.actions = {
       set: this.set,
@@ -39,8 +39,22 @@ export default class GForm extends React.Component<
     };
     this.props.getFormRef ? this.props.getFormRef(this.actions) : undefined;
   }
-  injectValues(values: any, model: any) {
-    console.log('map object for vals');
+  injectValues(values: any) {
+    Object.keys(values).map((item: any, index: any) => {
+      if (values[item].constructor === Array) {
+        values[item].map((item2: any, index2: any) => {
+          Object.keys(item2).map((item3: any, index3: any) => {
+            console.log(
+              item + '[' + index2 + ']' + '[' + item3 + ']',
+              item2[item3],
+              this.state.modelValidationPairs
+            );
+          });
+        });
+      } else {
+        console.log(item, values[item], this.state.modelValidationPairs);
+      }
+    });
   }
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
@@ -166,6 +180,17 @@ export default class GForm extends React.Component<
       case 'input':
         setTimeout(() => {
           if (!_.get(this.state.fieldStatus, model)) {
+            this.setState(
+              {
+                modelValidationPairs: {
+                  ...this.state.modelValidationPairs,
+                  [model]: validation
+                }
+              },
+              () => {
+                console.log(this.state.modelValidationPairs);
+              }
+            );
             _.set(this.state.validation, model, validation);
             this.validate(model, _.get(this.props.values, model), validation);
             this.setTouched(model, false);

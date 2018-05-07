@@ -18,14 +18,11 @@ class Demo extends React.Component<any, any> {
   }
   componentDidMount() {
     console.log('demo');
-    formRef.injectValues(
-      {
-        address: [{ landmark: 'santosh sir', line4: 'acv' }],
-        firstName: 'jazfasljjfalkza',
-        caption: 'Hala'
-      },
-      ''
-    );
+    formRef.injectValues({
+      address: [{ landmark: 'santosh sir', line4: 'acv' }],
+      firstName: 'jazfasljjfalkza',
+      caption: 'Hala'
+    });
   }
   increaseNest() {
     this.setState({

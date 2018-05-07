@@ -1,12 +1,8 @@
 import * as React from 'react';
 import validator from './validator/validator';
 import autobind from 'react-autobind';
-import { Subject } from 'rxjs';
-import { distinctUntilChanged, map, pairwise } from 'rxjs/operators';
 import * as _ from 'lodash';
 import ObjectDiffer from './objectDiffer';
-
-let valuePropStream = new Subject();
 
 export default class GForm extends React.Component<
   {
@@ -14,14 +10,13 @@ export default class GForm extends React.Component<
     initialValues?: any;
     onChange: Function;
     values?: any;
+    getFormRef?: Function;
   },
   any
 > {
   actions: {
     set: Function;
-    validate: Function;
-    setTouched: Function;
-    setPristine: Function;
+    injectValues: Function;
   };
 
   constructor(props: any) {
@@ -35,40 +30,18 @@ export default class GForm extends React.Component<
         valid: false,
         invalid: true,
         submitted: false
-      }
+      },
+      validation: {}
     };
     this.actions = {
       set: this.set,
-      validate: this.validate,
-      setTouched: this.setTouched,
-      setPristine: this.setPristine
+      injectValues: this.injectValues
     };
+    this.props.getFormRef ? this.props.getFormRef(this.actions) : undefined;
   }
-  componentDidMount() {
-    valuePropStream
-      .pipe(
-        map(val => {
-          return val;
-        }),
-        pairwise(),
-        map(([a, b]) => {
-          return ObjectDiffer(a, b);
-        })
-      )
-      .subscribe(val =>
-        console.log(val, 'Change in props // Difference object')
-      );
-    valuePropStream.next({});
-    valuePropStream.next(this.props.values);
+  injectValues(values: any, model: any) {
+    console.log('map object for vals');
   }
-
-  componentWillReceiveProps(next: any) {
-    console.log(next, 'jk');
-    let vals = _.merge({}, _.clone(next.values)); // Immutable
-    // this.propStream(vals);
-    valuePropStream.next(vals);
-  }
-
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
       setTimeout(
@@ -156,13 +129,12 @@ export default class GForm extends React.Component<
   }
 
   set(model: string, value: any, validation: any, values: any) {
-    let newValues = _.merge({}, _.clone(values)); // Immutable
-    _.set(newValues, model, value);
-    this.props.onChange(newValues);
+    // let newValues = _.merge({}, _.clone(values)); // Immutable
+    _.set(values, model, value);
+    this.props.onChange(values);
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
-    this.actions.validate(model, value, validation);
     _.get(this.state.fieldStatus, model).pristine
-      ? this.actions.setPristine(model, false)
+      ? this.setPristine(model, false)
       : undefined;
   }
 
@@ -194,27 +166,28 @@ export default class GForm extends React.Component<
       case 'input':
         setTimeout(() => {
           if (!_.get(this.state.fieldStatus, model)) {
-            this.actions.validate(
-              model,
-              this.props.values[model] ? this.props.values[model] : '',
-              validation
-            );
-            this.actions.setTouched(model, false);
-            this.actions.setPristine(model, true);
+            _.set(this.state.validation, model, validation);
+            this.validate(model, _.get(this.props.values, model), validation);
+            this.setTouched(model, false);
+            _.get(this.props.values, model) === ''
+              ? this.setPristine(model, true)
+              : this.setPristine(model, false);
           }
         }, 0);
         return {
           value: _.get(this.props.values, model)
             ? _.get(this.props.values, model)
             : '',
-          onChange: (e: any) =>
+          onChange: (e: any) => {
             this.actions.set(
               model,
               e.target.value,
               validation,
               this.props.values
-            ),
-          onFocus: (e: any) => this.actions.setTouched(model, true)
+            );
+            this.validate(model, e.target.value, validation);
+          },
+          onFocus: (e: any) => this.setTouched(model, true)
         };
         break;
     }
@@ -222,13 +195,13 @@ export default class GForm extends React.Component<
   }
 
   render() {
+    console.log('render');
     return this.props.children({
       values: this.props.values,
       actions: this.actions,
       getHandlers: this.getHandlers,
       fieldStatus: this.state.fieldStatus,
       formStatus: this.state.formStatus,
-      addressModel: this.state.addressModel,
       map: this.map
     });
   }

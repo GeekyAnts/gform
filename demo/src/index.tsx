@@ -3,32 +3,50 @@ import { render } from 'react-dom';
 import * as _ from 'lodash';
 import autobind from 'react-autobind';
 import Form from '../../src';
+let formRef: any = undefined;
 class Demo extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     autobind(this);
     this.state = {
       values: {
-        address: [{ landmark: 'santosh sir', line4: 'fsa' }],
-        firstName: 'jazza'
+        address: [{ landmark: 'santosh sir', line4: 'acv' }],
+        firstName: 'jazza',
+        caption: 'Hala'
       }
     };
   }
+  componentDidMount() {
+    console.log('demo');
+    formRef.injectValues(
+      {
+        address: [{ landmark: 'santosh sir', line4: 'acv' }],
+        firstName: 'jazfasljjfalkza',
+        caption: 'Hala'
+      },
+      ''
+    );
+  }
   increaseNest() {
-    // let vals = _.merge({}, _.clone(this.state.values));
-    // vals.address.push({ landmark: 'j@g.com', line4: 'j@g.com' });
-    // this.setState({
-    //   values: vals
-    // });
-    this.state.values.address.push({
-      landmark: 'j@g.com',
-      line4: 'j@g.com'
+    this.setState({
+      values: {
+        address: [
+          { landmark: 'j@g.c', line4: 'acv' },
+          { landmark: 'j@g.c', line4: 'acv' }
+        ],
+        firstName: 'jazza',
+        caption: 'Hala'
+      }
     });
-    this.forceUpdate();
   }
   decreaseNest() {
-    this.state.values.address.pop();
-    this.forceUpdate();
+    this.setState({
+      values: {
+        address: [{ landmark: 'santosh sir', line4: 'acv' }],
+        firstName: 'jazza',
+        caption: 'Hala'
+      }
+    });
   }
   render() {
     return (
@@ -39,67 +57,70 @@ class Demo extends React.Component<any, any> {
           onChange={(values: {}) => {
             this.setState({ values: values });
           }}
+          getFormRef={(ref: any) => (formRef = ref)}
         >
-          {($form: any) => (
-            <div>
-              <h4>First: (Multi validation rules)</h4>
-              <input
-                {...$form.getHandlers({
-                  type: 'input',
-                  model: 'firstName',
-                  validation: ['alphaNumeric', { min: 2 }]
-                })}
-              />
-              <h4>Naam:</h4>
-              <input
-                {...$form.getHandlers({
-                  type: 'input',
-                  model: 'caption',
-                  validation: 'letters'
-                })}
-              />
-              <h3>Addresses (Nesting)</h3>
-              <div style={{ background: 'green', padding: 30 }}>
-                {$form.map('address', ($address: any) => {
-                  return (
-                    <div key={$address.index}>
-                      <h1>Nest: {$address.index}</h1>
-                      <h4>landmark</h4>
-                      <input
-                        {...$address.getHandlers({
-                          type: 'input',
-                          model: 'landmark',
-                          validation: 'email'
-                        })}
-                      />
-                      <h4>line4</h4>
+          {($form: any) => {
+            return (
+              <div>
+                <h4>First: (Multi validation rules)</h4>
+                <input
+                  {...$form.getHandlers({
+                    type: 'input',
+                    model: 'firstName',
+                    validation: ['alphaNumeric', { min: 2 }]
+                  })}
+                />
+                <h4>Naam:</h4>
+                <input
+                  {...$form.getHandlers({
+                    type: 'input',
+                    model: 'caption',
+                    validation: 'letters'
+                  })}
+                />
+                <h3>Addresses (Nesting)</h3>
+                <div style={{ background: 'green', padding: 30 }}>
+                  {$form.map('address', ($address: any) => {
+                    return (
+                      <div key={$address.index}>
+                        <h1>Nest: {$address.index}</h1>
+                        <h4>landmark</h4>
+                        <input
+                          {...$address.getHandlers({
+                            type: 'input',
+                            model: 'landmark',
+                            validation: 'email'
+                          })}
+                        />
+                        <h4>line4</h4>
 
-                      <input
-                        {...$address.getHandlers({
-                          type: 'input',
-                          model: 'line4',
-                          validation: 'email'
-                        })}
-                      />
-                    </div>
-                  );
-                })}
+                        <input
+                          {...$address.getHandlers({
+                            type: 'input',
+                            model: 'line4',
+                            validation: 'email'
+                          })}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                <button onClick={e => this.increaseNest()}>INCREASE</button>
+                <button onClick={e => this.decreaseNest()}>DECREASE</button>
+                <h3>Values</h3>
+                <pre>{JSON.stringify($form.values, null, 4)}</pre>
+                <h3>FieldStatus:</h3>
+                <pre>{JSON.stringify($form.fieldStatus, null, 4)}</pre>
+                <h3>formStatus:</h3>
+                <pre>{JSON.stringify($form.formStatus, null, 4)}</pre>
               </div>
-              <button onClick={e => this.increaseNest()}>INCREASE</button>
-              <button onClick={e => this.decreaseNest()}>DECREASE</button>
-              <h3>Values</h3>
-              <pre>{JSON.stringify($form.values, null, 4)}</pre>
-              <h3>FieldStatus:</h3>
-              <pre>{JSON.stringify($form.fieldStatus, null, 4)}</pre>
-              <h3>formStatus:</h3>
-              <pre>{JSON.stringify($form.formStatus, null, 4)}</pre>
-            </div>
-          )}
+            );
+          }}
         </Form>
         <button
           onClick={e =>
             this.setState({
-              values: { ...this.state.values, firstName: 'hehehe' }
+              values: { ...this.state.values, firstName: '' }
             })
           }
         >

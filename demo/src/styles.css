@@ -1,0 +1,69 @@
+#form {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+#form-values {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 1px solid black;
+  overflow-y: scroll !important;
+}
+#form-part {
+  height: 60%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll !important;
+}
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden !important;
+}
+.form-value-child {
+  margin: 2%;
+}
+.input {
+  width: 40%;
+  height: 50%;
+}
+.error {
+  color: red;
+  width: 40%;
+  height: 7%;
+  text-align: flex-start;
+  font-size: 14px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+#change-on-fly {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 2%;
+  background-color: red;
+  justify-content: center;
+}
+#submit {
+  width: 40%;
+  height: 50px !important;
+}
+#submit-parent {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}

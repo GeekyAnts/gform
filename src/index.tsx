@@ -28,19 +28,19 @@ export default class GForm extends React.Component<
         dirty: false,
         valid: false,
         invalid: true,
-        submitted: false
+        submitted: false,
       },
-      touchedModels: {}
+      touchedModels: {},
     };
     this.actions = {
       set: this.set,
-      injectValues: this.injectValues
+      injectValues: this.injectValues,
     };
     this.props.getFormRef ? this.props.getFormRef(this.actions) : undefined;
   }
   injectValues(values: any) {
     this.setState({
-      fieldStatus: {}
+      fieldStatus: {},
     });
     this.props.onChange(values);
   }
@@ -50,7 +50,7 @@ export default class GForm extends React.Component<
         () =>
           this.props.onChange({
             ...this.props.values,
-            [model1]: [{}]
+            [model1]: [{}],
           }),
         0
       );
@@ -59,15 +59,15 @@ export default class GForm extends React.Component<
         return renderFormNest({
           index: index,
           each: item,
-          getHandlers: ({ type, model, validation }: any) => {
+          getHandlers: ({type, model, validation}: any) => {
             return {
               ...this.getHandlers({
                 type,
                 model: model1 + '[' + index + ']' + '[' + model + ']',
-                validation
-              })
+                validation,
+              }),
             };
-          }
+          },
         });
       });
     }
@@ -77,15 +77,15 @@ export default class GForm extends React.Component<
     let fieldStatus = this.state.fieldStatus;
     let prevObj = _.get(this.state.fieldStatus, model)
       ? _.get(this.state.fieldStatus, model)
-      : { errors: {} };
+      : {errors: {}};
     delete prevObj.errors;
     _.set(fieldStatus, model, {
       errors: validator(value, validation),
-      ...prevObj
+      ...prevObj,
     });
     this.setState(
       () => {
-        return { fieldStatus: fieldStatus };
+        return {fieldStatus: fieldStatus};
       },
       () => {
         this.setFormValidity(this.state.fieldStatus);
@@ -97,7 +97,7 @@ export default class GForm extends React.Component<
     let formStatus = this.state.formStatus;
     formStatus.pristine = value;
     formStatus.dirty = !value;
-    this.setState({ formStatus: formStatus });
+    this.setState({formStatus: formStatus});
   }
 
   setFormValidity(fieldStatus: any) {
@@ -120,22 +120,22 @@ export default class GForm extends React.Component<
           formStatus: {
             ...this.state.formStatus,
             valid: true,
-            invalid: false
-          }
+            invalid: false,
+          },
         })
       : this.setState({
           formStatus: {
             ...this.state.formStatus,
             valid: false,
-            invalid: true
-          }
+            invalid: true,
+          },
         });
   }
 
   set(model: string, value: any, validation: any, values: any) {
     let newValues = _.merge({}, _.clone(values)); // Immutable
     _.set(newValues, model, value);
-    this.props.onChange(newValues);
+    this.props.onChange(newValues, model);
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     _.get(this.state.fieldStatus, model).pristine
       ? this.setPristine(model, false)
@@ -146,17 +146,17 @@ export default class GForm extends React.Component<
     this.setState({
       touchedModels: {
         ...this.state.touchedModels,
-        [model]: value
-      }
+        [model]: value,
+      },
     });
     let fieldStatus = this.state.fieldStatus;
     _.set(fieldStatus, model, {
       ..._.get(this.state.fieldStatus, model),
       touched: value,
-      untouched: !value
+      untouched: !value,
     });
     this.setState(() => {
-      return { fieldStatus: fieldStatus };
+      return {fieldStatus: fieldStatus};
     });
   }
   setPristine(model: string, value: boolean) {
@@ -164,14 +164,14 @@ export default class GForm extends React.Component<
     _.set(fieldStatus, model, {
       ..._.get(this.state.fieldStatus, model),
       pristine: value,
-      dirty: !value
+      dirty: !value,
     });
     this.setState(() => {
-      return { fieldStatus: fieldStatus };
+      return {fieldStatus: fieldStatus};
     });
   }
 
-  getHandlers({ type, model, validation }: any) {
+  getHandlers({type, model, validation}: any) {
     switch (type) {
       case 'input':
         setTimeout(() => {
@@ -198,7 +198,7 @@ export default class GForm extends React.Component<
             );
             this.validate(model, e.target.value, validation);
           },
-          onFocus: (e: any) => this.setTouched(model, true)
+          onFocus: (e: any) => this.setTouched(model, true),
         };
         break;
     }
@@ -212,7 +212,7 @@ export default class GForm extends React.Component<
       getHandlers: this.getHandlers,
       fieldStatus: this.state.fieldStatus,
       formStatus: this.state.formStatus,
-      map: this.map
+      map: this.map,
     });
   }
 }

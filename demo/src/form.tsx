@@ -35,6 +35,14 @@ export default class TestForm extends React.Component<any, any> {
 
   setCountry(value: any) {
     this.setState({values: {...this.state.values, country: value}});
+    formRef.injectValues({
+      name: this.state.name,
+      mailId: this.state.name,
+      country: value,
+      phoneNumber: this.state.phoneNumber,
+      pincode: this.state.pincode,
+      gitLink: this.state.gitLink,
+    });
   }
   onSubmit() {
     this.setState({showError: true});
@@ -44,8 +52,8 @@ export default class TestForm extends React.Component<any, any> {
     return (
       <Form
         values={this.state.values}
-        onChange={(values: {}) => {
-          console.log(values);
+        onChange={(values: {}, model: string) => {
+          console.log(values, model);
           this.setState({values: {...values}});
         }}
         getFormRef={(ref: any) => (formRef = ref)}
@@ -54,141 +62,173 @@ export default class TestForm extends React.Component<any, any> {
           return (
             <div id="form">
               <div id="form-part">
-                <h4>Name: multi validation rules (alphaNumeric,min)</h4>
-                <input
-                  className="input"
-                  {...$form.getHandlers({
-                    type: 'input',
-                    model: 'name',
-                    validation: ['alphaNumeric', {min: 2}],
-                  })}
-                />
-                <div className="error">
-                  {$form.fieldStatus.name &&
-                  $form.fieldStatus.name.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  )}
-                </div>
-                <h4>mail Id: mail Id validator</h4>
-                <input
-                  className="input"
-                  {...$form.getHandlers({
-                    type: 'input',
-                    model: 'email',
-                    validation: 'email',
-                  })}
-                />
-                <div className="error">
-                  {$form.fieldStatus.email &&
-                  $form.fieldStatus.email.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  )}
-                </div>
-                <h4>
-                  Phone number: Custom validator method with required(built in)
-                  validator
-                </h4>
-                <input
-                  className="input"
-                  {...$form.getHandlers({
-                    type: 'input',
-                    model: 'phoneNumber',
-                    validation: ['required', this.validatePhoneNumber],
-                  })}
-                />
-                <div className="error">
-                  {$form.fieldStatus.phoneNumber &&
-                  $form.fieldStatus.phoneNumber.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  )}
-                </div>
-
-                <h4>
-                  Country: Change in form values When user enters on input box
-                  or when values are changed on fly
-                </h4>
-                <div id="change-on-fly">
+                <h1>G-Form Demo</h1>
+                <div className="form-item">
+                  <h4>Name: multi validation rules (alphaNumeric,min)</h4>
                   <input
                     className="input"
                     {...$form.getHandlers({
                       type: 'input',
-                      model: 'country',
-                      validation: ['required'],
+                      model: 'name',
+                      validation: ['alphaNumeric', {min: 2}],
                     })}
                   />
-                  <span>
-                    <select
-                      onChange={(event: any) => {
-                        this.setCountry(event.target.value);
-                      }}
-                    >
-                      <option>Select</option>
-                      <option>India</option>
-                      <option>US</option>
-                      <option>UK</option>
-                    </select>
-                  </span>
-                </div>
-                <div className="error">
-                  {$form.fieldStatus.country &&
-                  $form.fieldStatus.country.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  )}
-                </div>
-                <h4>
-                  pincode: custom Regular expression with other built in
-                  validator
-                </h4>
-                <input
-                  className="input"
-                  {...$form.getHandlers({
-                    type: 'input',
-                    model: 'pincode',
-                    validation: ['required', /^[0-9]{6}$/],
-                  })}
-                />
-                <div className="error">
-                  {$form.fieldStatus.phoneNumber &&
-                  $form.fieldStatus.phoneNumber.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  )}
+                  <div className="error">
+                    {$form.fieldStatus.name &&
+                    $form.fieldStatus.name.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    )}
+                  </div>
                 </div>
 
-                <h4>
-                  gitLink: URL validator and Individual onChange method
-                  execution. onSubmit display error.
-                </h4>
-                <input
-                  className="input"
-                  onChange={event =>
-                    console.log(
-                      'Individual onChange method: gitLink Changed ' +
-                        event.target.value
+                <div className="form-item">
+                  <h4>mail Id: mail Id validator</h4>
+                  <input
+                    className="input"
+                    {...$form.getHandlers({
+                      type: 'input',
+                      model: 'email',
+                      validation: 'email',
+                    })}
+                  />
+                  <div className="error">
+                    {$form.fieldStatus.email &&
+                    $form.fieldStatus.email.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
                     )}
-                  {...$form.getHandlers({
-                    type: 'input',
-                    model: 'gitLink',
-                    validation: 'urls',
-                  })}
-                />
-                <div className="error">
-                  {this.state.showError ? $form.fieldStatus.gitLink &&
-                  $form.fieldStatus.gitLink.errors.valid ? (
-                    'valid'
-                  ) : (
-                    'invalid'
-                  ) : null}
+                  </div>
                 </div>
+                <div className="form-item">
+                  <h4>
+                    Phone number: Custom validator method with required(built
+                    in) validator
+                  </h4>
+                  <input
+                    className="input"
+                    {...$form.getHandlers({
+                      type: 'input',
+                      model: 'phoneNumber',
+                      validation: ['required', this.validatePhoneNumber],
+                    })}
+                  />
+                  <div className="error">
+                    {$form.fieldStatus.phoneNumber &&
+                    $form.fieldStatus.phoneNumber.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    )}
+                  </div>
+                </div>
+                <div className="form-item">
+                  <h4>
+                    Phone number: Custom validator method with required(built
+                    in) validator
+                  </h4>
+                  <input
+                    className="input"
+                    {...$form.getHandlers({
+                      type: 'input',
+                      model: 'phoneNumber',
+                      validation: ['required', this.validatePhoneNumber],
+                    })}
+                  />
+                  <div className="error">
+                    {$form.fieldStatus.phoneNumber &&
+                    $form.fieldStatus.phoneNumber.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    )}
+                  </div>
+                </div>
+
+                <div className="form-item">
+                  <h4>
+                    Country: Change in form values When user enters on input box
+                    or when values are changed on fly
+                  </h4>
+                  <div id="change-on-fly">
+                    <input
+                      className="input-2"
+                      {...$form.getHandlers({
+                        type: 'input',
+                        model: 'country',
+                        validation: ['email'],
+                      })}
+                    />
+                    <span className="select-1">
+                      <select
+                        className="select-2"
+                        onChange={(event: any) => {
+                          this.setCountry(event.target.value);
+                        }}
+                      >
+                        <option>Select</option>
+                        <option>India@shf.com</option>
+                        <option>US@shf.com</option>
+                        <option>UK@shf.com</option>
+                      </select>
+                    </span>
+                  </div>
+                  <div className="error">
+                    {$form.fieldStatus.country &&
+                    $form.fieldStatus.country.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    )}
+                  </div>
+                </div>
+                <div className="form-item">
+                  <h4>
+                    pincode: custom Regular expression with other built in
+                    validator
+                  </h4>
+                  <input
+                    className="input"
+                    {...$form.getHandlers({
+                      type: 'input',
+                      model: 'pincode',
+                      validation: ['required', {customRegx: /^[0-9]{6}$/}],
+                    })}
+                  />
+                  <div className="error">
+                    {$form.fieldStatus.phoneNumber &&
+                    $form.fieldStatus.phoneNumber.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    )}
+                  </div>
+                </div>
+                <div className="form-item">
+                  <h4>
+                    gitLink: URL validator and Individual onChange method
+                    execution. onSubmit display error.
+                  </h4>
+                  <input
+                    className="input"
+                    {...$form.getHandlers({
+                      type: 'input',
+                      model: 'gitLink',
+                      validation: 'urls',
+                    })}
+                  />
+                  <div className="error">
+                    {this.state.showError ? $form.fieldStatus.gitLink &&
+                    $form.fieldStatus.gitLink.errors.valid ? (
+                      'valid'
+                    ) : (
+                      'invalid'
+                    ) : null}
+                  </div>
+                </div>
+
                 <div id="submit-parent">
                   <button id="submit" onClick={() => this.onSubmit()}>
                     Submit

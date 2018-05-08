@@ -17,14 +17,7 @@
   border: 1px solid black;
   overflow-y: scroll !important;
 }
-#form-part {
-  height: 60%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: scroll !important;
-}
+
 body {
   height: 100vh;
   width: 100vw;
@@ -35,12 +28,24 @@ body {
 }
 .input {
   width: 40%;
-  height: 50%;
+  height: 20%;
+}
+.input-2 {
+  width: 40%;
+  height: 35px;
+}
+.select-1 {
+  height: 100%;
+  width: 10%;
+}
+.select-2 {
+  width: 100%;
+  height: 40px;
 }
 .error {
   color: red;
   width: 40%;
-  height: 7%;
+  height: 20%;
   text-align: flex-start;
   font-size: 14px;
   margin-top: 1%;
@@ -51,7 +56,8 @@ body {
   flex-direction: row;
   width: 100%;
   margin-bottom: 2%;
-  background-color: red;
+  min-height: 40%;
+
   justify-content: center;
 }
 #submit {
@@ -66,4 +72,22 @@ body {
   align-items: center;
   margin-top: 5%;
   margin-bottom: 5%;
+}
+#form-part {
+  height: 60%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll !important;
+}
+.form-item {
+  height: 100px !important;
+  min-height: 150px !important;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 1%;
 }

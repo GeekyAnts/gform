@@ -42,15 +42,21 @@ export default class GForm extends React.Component<
     this.setState({
       fieldStatus: {}
     });
-    this.props.onChange(values);
+    this.props.onChange({
+      newValues: values,
+      model: 'all'
+    });
   }
   map(model1: string, renderFormNest: Function) {
     if (!this.props.values[model1]) {
       setTimeout(
         () =>
           this.props.onChange({
-            ...this.props.values,
-            [model1]: [{}]
+            newValues: {
+              ...this.props.values,
+              [model1]: [{}]
+            },
+            model: model1
           }),
         0
       );
@@ -135,7 +141,10 @@ export default class GForm extends React.Component<
   set(model: string, value: any, validation: any, values: any) {
     let newValues = _.merge({}, _.clone(values)); // Immutable
     _.set(newValues, model, value);
-    this.props.onChange(newValues);
+    this.props.onChange({
+      newValues: newValues,
+      model: model
+    });
     this.state.formStatus.pristine ? this.setFormPristine(false) : undefined;
     _.get(this.state.fieldStatus, model).pristine
       ? this.setPristine(model, false)

@@ -11,14 +11,19 @@ class Demo extends React.Component<any, any> {
     this.state = {
       values: {
         address: [{ landmark: 'santosh sir', line4: 'acv' }],
-        firstName: 'j',
+        firstName: 'j1',
         caption: 'Hala'
       }
     };
   }
   increaseNest() {
-    this.state.values.address.push({ landmark: 'san@g.c', line4: 'acv@g.c' });
-    formRef.injectValues(this.state.values);
+    // this.state.values.address.push({ landmark: 'san@g.c', line4: 'acv@g.c' });
+    // formRef.injectValues(this.state.values);
+    formRef.injectValues({
+      address: [{ landmark: 'santosh sir', line4: 'acv' }],
+      firstName: 'j@g.c',
+      caption: 'Hala'
+    });
   }
   decreaseNest() {
     this.state.values.address.pop();
@@ -30,8 +35,9 @@ class Demo extends React.Component<any, any> {
         <h1>g-schema</h1>
         <Form
           values={this.state.values}
-          onChange={(values: {}) => {
-            this.setState({ values: { ...values } });
+          onChange={(change: any) => {
+            console.log('OnChange at ' + change.model);
+            this.setState({ values: { ...change.newValues } });
           }}
           getFormRef={(ref: any) => (formRef = ref)}
         >
@@ -43,7 +49,7 @@ class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'firstName',
-                    validation: ['alphaNumeric', { min: 2 }]
+                    validation: ['alphaNumeric', { min: 2 }, 'email']
                   })}
                 />
                 <h4>Naam:</h4>
@@ -51,7 +57,7 @@ class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'caption',
-                    validation: 'letters'
+                    validation: { customRegx: /^[0-9]+$/ }
                   })}
                 />
                 <h3>Addresses (Nesting)</h3>

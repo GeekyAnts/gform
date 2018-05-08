@@ -1,13 +1,22 @@
 # g-schema
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
+Easy, Angular like, hastlefree forms for React. <br/>
+The Library is controlled in nature with the user having to define the `field` and also set it `onChange`
+Checkout Demo app in the `./demo/` directory.
 
 ## Use case
 
 ```
-<Form>
+import Gform from "gform";
+
+ ....
+
+render(){
+  return(
+<Gform value = {this.state.values}
+      onChange= {(val : any) => this.setState({
+        values: val.newValues
+      })}>
           {($form: any) => (
             <div>
               <h4>First: (Multi validation rules)</h4>
@@ -21,7 +30,7 @@
               // Nested form
               <h3>Addresses (Nesting)</h3>
               <div style={{ background: 'green', padding: 30 }}>
-                {$form.map('books', ($address: any) => {
+                {$form.map('address', ($address: any) => {
                   return (
                     <div key={$address.index}>
                       <h4>landmark</h4>
@@ -36,7 +45,8 @@
                   );
                 })}
           )}
-        </Form>
+        </Gform>
+  )}
 ```
 
 ## Later all form data is available within out component in the $form object
@@ -73,11 +83,41 @@
 }
 ```
 
+## Props :-
+
+| Prop       |             Use             |   Type   |
+| :--------- | :-------------------------: | :------: |
+| Values     |  Value of controlled input  |  Object  |
+| onChange   | Callback when values change | Function |
+| getFormRef | Callback to get ref of form | Function |
+
+## Setting values at runtime
+
+In order to inject new values at runtime, all the fields need to be revalidated. <br />
+For this very purpose, we have injectValues function in received formRef in `getFormRef` props. <br />
+
+```
+<Form
+          values={this.state.values}
+          onChange={(values: {}) => {
+            this.setState({ values: { ...values.newValues } });
+          }}
+          getFormRef={(ref: any) => (formRef = ref)}
+        >
+```
+
+Later values can be injected like this :-
+
+```
+this.state.values.address.push({ landmark: 'san@g.c', line4: 'acv@g.c' });
+    formRef.injectValues(this.state.values);
+```
+
 ## Validations :-
 
 Validations can be one of following
 
-1.  Predefined strings ('email', 'digits', 'alphaNumeric', 'alphaNumericNoSpaces', 'ip', 'password', 'urls','required').
+1.  Predefined strings (`email`, `digits`, `alphaNumeric`, `alphaNumericNoSpaces`, `ip`, `password`, `urls`,`required`).
 2.  Objects ({max : 10}, { min: 8 }, { validationRule: anyStringFromAbove }, { customRegx: 'customRegularExpression'})
-4.  Custom Validation Method
-3.  Array: Collection of any of the above validationRules.
+3.  Custom Validation Method
+4.  Array: Collection of any of the above validationRules.

@@ -9,14 +9,14 @@ export default class Demo extends React.Component<any, any> {
     autobind(this);
     this.state = {
       values: {
-        address: [{landmark: 'santosh sir', line4: 'acv'}],
+        address: [{ landmark: 'santosh sir', line4: 'acv' }],
         firstName: 'j',
-        caption: 'Hala',
-      },
+        caption: 'Hala'
+      }
     };
   }
   increaseNest() {
-    this.state.values.address.push({landmark: 'san@g.c', line4: 'acv@g.c'});
+    this.state.values.address.push({ landmark: 'san@g.c', line4: 'acv@g.c' });
     formRef.injectValues(this.state.values);
   }
   decreaseNest() {
@@ -30,7 +30,7 @@ export default class Demo extends React.Component<any, any> {
         <Form
           values={this.state.values}
           onChange={(values: {}) => {
-            this.setState({values: {...values}});
+            this.setState({ values: { ...values } });
           }}
           getFormRef={(ref: any) => (formRef = ref)}
         >
@@ -42,7 +42,7 @@ export default class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'firstName',
-                    validation: ['alphaNumeric', {min: 2}],
+                    validation: ['alphaNumeric', { min: 2 }]
                   })}
                 />
                 <h4>Naam:</h4>
@@ -50,11 +50,11 @@ export default class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'caption',
-                    validation: 'letters',
+                    validation: 'letters'
                   })}
                 />
                 <h3>Addresses (Nesting)</h3>
-                <div style={{background: 'green', padding: 30}}>
+                <div style={{ background: 'green', padding: 30 }}>
                   {$form.map('address', ($address: any) => {
                     return (
                       <div key={$address.index}>
@@ -64,7 +64,7 @@ export default class Demo extends React.Component<any, any> {
                           {...$address.getHandlers({
                             type: 'input',
                             model: 'landmark',
-                            validation: 'email',
+                            validation: 'email'
                           })}
                         />
                         <h4>line4</h4>
@@ -73,7 +73,7 @@ export default class Demo extends React.Component<any, any> {
                           {...$address.getHandlers({
                             type: 'input',
                             model: 'line4',
-                            validation: 'email',
+                            validation: 'email'
                           })}
                         />
                       </div>
@@ -95,8 +95,9 @@ export default class Demo extends React.Component<any, any> {
         <button
           onClick={e =>
             this.setState({
-              values: {...this.state.values, firstName: ''},
-            })}
+              values: { ...this.state.values, firstName: '' }
+            })
+          }
         >
           TOGGLE VALUES
         </button>

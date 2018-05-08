@@ -1,5 +1,5 @@
 module.exports = {
-  type: "react-component",
+  type: 'react-component',
   npm: {
     cjs: false,
     esModules: false,
@@ -9,12 +9,12 @@ module.exports = {
   webpack: {
     config(config) {
       config.entry = {
-        demo: ["./demo/src/index.tsx"]
+        demo: ['./demo/src/index.tsx']
       };
-      config.resolve.extensions.push(".ts", ".tsx");
+      config.resolve.extensions.push('.ts', '.tsx');
       config.module.rules.push({
         test: /\.tsx?$/,
-        loader: "awesome-typescript-loader"
+        loader: 'awesome-typescript-loader'
       });
 
       return config;

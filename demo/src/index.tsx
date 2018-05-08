@@ -1,4 +1,5 @@
 import * as React from 'react';
+<<<<<<< HEAD
 import { render } from 'react-dom';
 import * as _ from 'lodash';
 import autobind from 'react-autobind';
@@ -75,42 +76,15 @@ class Demo extends React.Component<any, any> {
                           })}
                         />
                         <h4>line4</h4>
+=======
+import {render} from 'react-dom';
+import TestForm from './form';
+>>>>>>> 90b4f0958edb351937982b71b5e567b3da54256c
 
-                        <input
-                          {...$address.getHandlers({
-                            type: 'input',
-                            model: 'line4',
-                            validation: 'email'
-                          })}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-                <button onClick={e => this.increaseNest()}>INCREASE</button>
-                <button onClick={e => this.decreaseNest()}>DECREASE</button>
-                <h3>Values</h3>
-                <pre>{JSON.stringify($form.values, null, 4)}</pre>
-                <h3>FieldStatus:</h3>
-                <pre>{JSON.stringify($form.fieldStatus, null, 4)}</pre>
-                <h3>formStatus:</h3>
-                <pre>{JSON.stringify($form.formStatus, null, 4)}</pre>
-              </div>
-            );
-          }}
-        </Form>
-        <button
-          onClick={e =>
-            this.setState({
-              values: { ...this.state.values, firstName: '' }
-            })
-          }
-        >
-          TOGGLE VALUES
-        </button>
-      </div>
-    );
+class FormDemo extends React.Component<any, any> {
+  render() {
+    return <TestForm />;
   }
 }
 
-render(<Demo />, document.querySelector('#demo'));
+render(<FormDemo />, document.querySelector('#demo'));

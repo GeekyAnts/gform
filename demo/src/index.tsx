@@ -30,8 +30,8 @@ export default class Demo extends React.Component<any, any> {
         <h1>g-schema</h1>
         <Form
           values={this.state.values}
-          onChange={(values: {}) => {
-            this.setState({ values: { ...values } });
+          onChange={(values: any) => {
+            this.setState({ values: { ...values.newValues } });
           }}
           getFormRef={(ref: any) => (formRef = ref)}
         >
@@ -43,7 +43,7 @@ export default class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'firstName',
-                    validation: ['alphaNumeric', { min: 2 }]
+                    validation: ['alphaNumeric', { min: 2 }, 'email']
                   })}
                 />
                 <h4>Naam:</h4>
@@ -51,7 +51,21 @@ export default class Demo extends React.Component<any, any> {
                   {...$form.getHandlers({
                     type: 'input',
                     model: 'caption',
-                    validation: 'letters'
+                    validation: [
+                      'letters',
+                      { customRegx1: /^[0-9]+$/ },
+                      { customRegx2: /^[a-zA-Z0-9]*$/ },
+                      {
+                        customFunction1: () => {
+                          return false;
+                        }
+                      },
+                      {
+                        customFunctionShakti: () => {
+                          return false;
+                        }
+                      }
+                    ]
                   })}
                 />
                 <h3>Addresses (Nesting)</h3>

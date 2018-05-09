@@ -15,6 +15,7 @@ export default class GForm extends React.Component<
   actions: {
     set: Function;
     injectValues: Function;
+    submitForm: Function;
   };
 
   constructor(props: any) {
@@ -33,7 +34,8 @@ export default class GForm extends React.Component<
     };
     this.actions = {
       set: this.set,
-      injectValues: this.injectValues
+      injectValues: this.injectValues,
+      submitForm: this.submitForm
     };
     this.props.getFormRef ? this.props.getFormRef(this.actions) : undefined;
   }
@@ -44,6 +46,14 @@ export default class GForm extends React.Component<
     this.props.onChange({
       newValues: values,
       model: 'all'
+    });
+  }
+  submitForm() {
+    this.setState({
+      formStatus: {
+        ...this.state.formStatus,
+        submitted: true
+      }
     });
   }
   map(model1: string, renderFormNest: Function) {

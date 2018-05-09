@@ -1,0 +1,60 @@
+#form-item-expandable-2 {
+  height: fit-content;
+  min-height: 100%;
+  width: 100%;
+}
+.close-button-container {
+  width: 99%;
+  justify-content: flex-end;
+  align-items: center;
+  display: flex;
+}
+.close-button {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  align-self: flex-end;
+}
+.close-button:focus {
+  outline: none;
+}
+.close-button:active {
+  opacity: 0.5;
+}
+#add-new-address-button {
+  height: 30px;
+  width: 30px;
+  margin-left: 97%;
+  background-color: #4169e1;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+}
+#add-new-address-button:focus {
+  outline: none;
+}
+#add-new-address-button:active {
+  opacity: 0.5;
+}
+.form-item-row-2-item {
+  flex: 2;
+  height: 100%;
+  display: flex;
+  margin-right: 1%;
+  flex-direction: column;
+}
+.form-item-input-validated-2,
+.form-item-input-error-2 {
+  width: 98%;
+  height: 40px !important;
+  border-radius: 10px;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+.header {
+  font-size: 22px;
+  color: grey;
+  margin-top: 2%;
+}

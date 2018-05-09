@@ -7,7 +7,7 @@ export default function validate(value: any, validation: any) {
         outputError = {
           ...outputError,
           errorMessages: {
-            [Object.keys(item)[0]]: extractObjectError(item, value),
+            ...extractObjectError(item, value),
             ...outputError.errorMessages,
           },
           valid: extractObjectError(item, value) ? false : outputError.valid,
@@ -21,21 +21,6 @@ export default function validate(value: any, validation: any) {
           },
           valid: getErrorMessage(item, value) ? false : outputError.valid,
         };
-      } else if (typeof item === 'function') {
-        let validationResult = item(value);
-
-        if (outputError.valid === true) {
-          outputError = {
-            ...outputError,
-            errorMessages: {
-              ['custom validator']: validationResult
-                ? undefined
-                : 'Invalid value',
-              ...outputError.errorMessages,
-            },
-            valid: validationResult,
-          };
-        }
       }
     });
   } else if (validation.constructor === Object) {
@@ -55,15 +40,6 @@ export default function validate(value: any, validation: any) {
       },
       valid: getErrorMessage(validation, value) ? false : outputError.valid,
     };
-  } else if (typeof validation === 'function') {
-    let validationResult = validation(value);
-    outputError = {
-      ...outputError,
-      errorMessages: {
-        ['custom validator']: validationResult ? undefined : 'Invalid value',
-      },
-      valid: validationResult,
-    };
   }
   return outputError;
 }
@@ -81,7 +57,9 @@ function extractObjectError(validation: any, value: string) {
         validation[Object.keys(validation)[0]]
       );
       customRegx = new RegExp(ValidatorExpressions.maxMin);
-      return customRegx.test(value) ? undefined : 'max limit crossed';
+      return customRegx.test(value)
+        ? undefined
+        : {[Object.keys(validation)[0]]: 'max limit crossed'};
     case 'min':
       ValidatorExpressions.maxMin = ValidatorExpressions.maxMin.replace(
         'min',
@@ -92,13 +70,31 @@ function extractObjectError(validation: any, value: string) {
         ''
       );
       customRegx = new RegExp(ValidatorExpressions.maxMin);
-      return customRegx.test(value) ? undefined : 'min limit not fulfilled';
+      return customRegx.test(value)
+        ? undefined
+        : {[Object.keys(validation)[0]]: 'min limit not fulfilled'};
     case 'validationRule':
-      return getErrorMessage(validation[Object.keys(validation)[0]], value);
-    case 'customRegx':
-      let userRegx = new RegExp(validation[Object.keys(validation)[0]]);
-      return userRegx.test(value) ? undefined : 'No match';
+      return getErrorMessage(validation[Object.keys(validation)[0]], value)
+        ? {
+            [Object.keys(validation)[0]]: getErrorMessage(
+              validation[Object.keys(validation)[0]],
+              value
+            ),
+          }
+        : undefined;
     default:
+      if (Object.keys(validation)[0].includes('customRegx')) {
+        let userRegx = new RegExp(validation[Object.keys(validation)[0]]);
+        return userRegx.test(value)
+          ? undefined
+          : {[Object.keys(validation)[0]]: 'Custom Regx no match'};
+      } else if (Object.keys(validation)[0].includes('customFunction')) {
+        if (typeof validation[Object.keys(validation)[0]] === 'function') {
+          return validation[Object.keys(validation)[0]]()
+            ? undefined
+            : {[Object.keys(validation)[0]]: 'Custom function no match'};
+        }
+      }
       return undefined;
   }
 }

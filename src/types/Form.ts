@@ -9,7 +9,7 @@ export default interface Form {
   fields: FormFields;
   ui: UIs;
   map: (field: string) => {};
-}
+};
 
 interface FormFields {
   [key: string]: FormField;

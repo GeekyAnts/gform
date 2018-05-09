@@ -1,10 +1,15 @@
 import * as React from 'react';
 import {render} from 'react-dom';
-import TestForm from './form';
+//import TestForm from './form';
+import Signup from './signup/index';
 
 class FormDemo extends React.Component<any, any> {
   render() {
-    return <TestForm />;
+    return (
+      <div>
+        <Signup />
+      </div>
+    );
   }
 }
 
